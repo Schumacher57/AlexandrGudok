@@ -28,6 +28,7 @@ namespace BankWinForms
                 {
                     allDebitors.Add(result);
                 }
+
             }
             else
             {
