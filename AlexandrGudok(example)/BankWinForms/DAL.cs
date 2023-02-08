@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -16,27 +17,78 @@ namespace BankWinForms
         public ArrayList GetAllDebitors()
         {
             ArrayList allDebitors = new ArrayList();
-            SqlConnection con = new SqlConnection(connectionString);
-            SqlCommand com = new SqlCommand("SELECT * FROM Debitors", con);
 
-            con.Open();
 
-            SqlDataReader dr = com.ExecuteReader();
-            if (dr.HasRows)
+
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
-                foreach (DbDataRecord result in dr)
+                SqlCommand com = new SqlCommand("SELECT * FROM Debitors Order By Name", con);
+
+                try
                 {
-                    allDebitors.Add(result);
+                    con.Open();
+                    SqlDataReader dr = com.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        foreach (DbDataRecord result in dr)
+                        {
+                            allDebitors.Add(result);
+                        }
+
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch
+                {
+
                 }
 
             }
-            else
-            {
-                return null;
-            }
-            con.Close();
+
+
 
             return allDebitors;
+        }
+
+        internal ArrayList GetAllCreditsForDebitor(string debitorID)
+        {
+            ArrayList allCredits = new ArrayList();
+            string query = String.Format("SELECT * FROM Credits Where DebitorID='{0}' Order By OpenDate Desc", debitorID);
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(query, con);
+
+                try
+                {
+                    con.Open();
+                    SqlDataReader dr = com.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        foreach (DbDataRecord result in dr)
+                        {
+                            allCredits.Add(result);
+                        }
+
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch
+                {
+
+                }
+
+            }
+
+
+
+            return allCredits;
         }
     }
 }
