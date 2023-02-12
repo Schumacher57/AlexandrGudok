@@ -90,5 +90,44 @@ namespace BankWinForms
 
             return allCredits;
         }
+
+        internal object GetAllPaymentsForCredit(string creditorID)
+        {
+
+            ArrayList allPayments = new ArrayList();
+            string query = String.Format("SELECT * FROM Payments Where CreditsID='{0}' Order By PaymentDate Desc", creditorID);
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(query, con);
+
+                try
+                {
+                    con.Open();
+                    SqlDataReader dr = com.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        foreach (DbDataRecord result in dr)
+                        {
+                            allPayments.Add(result);
+                        }
+
+                    }
+                    else
+                    {
+                        return new ArrayList();
+                    }
+                }
+                catch
+                {
+
+                }
+
+            }
+
+
+
+            return allPayments;
+        }
     }
 }

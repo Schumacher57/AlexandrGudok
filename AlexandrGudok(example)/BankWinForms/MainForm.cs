@@ -61,7 +61,14 @@ namespace BankWinForms
         private void MainForm_Load(object sender, EventArgs e)
         {
             dgv_debitors.CellEnter += new DataGridViewCellEventHandler(dgv_DebitorsClickEvent);
-
+            dgv_credits.CellEnter += Dgv_credits_CellEnter;
         }
+
+        private void Dgv_credits_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            string creditorID = dgv_credits.CurrentRow.Cells[0].Value.ToString();
+            dgv_payments.DataSource = dal.GetAllPaymentsForCredit(creditorID);
+        }
+
     }
 }
